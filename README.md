@@ -16,6 +16,7 @@ O UnifiAccess é responsável por **quem o usuário é**. Cada sistema consumido
 
 ## Recursos do MVP
 
+- Primeiro acesso com criação segura do administrador inicial
 - Login por email ou nome de usuário
 - Usuários `ADMIN` e `USER`
 - Cadastro de usuários
@@ -46,7 +47,7 @@ cd unifi-access
 Copy-Item .env.example .env
 ```
 
-Altere pelo menos `SESSION_SECRET` e `ADMIN_PASSWORD` no arquivo `.env`.
+Altere o valor de `SESSION_SECRET` para uma chave aleatória com pelo menos 32 caracteres.
 
 ### 3. Instale as dependências
 
@@ -63,13 +64,7 @@ docker compose ps
 
 O schema é criado automaticamente na primeira inicialização do volume.
 
-### 5. Crie o admin
-
-```powershell
-npm run db:seed
-```
-
-### 6. Rode o projeto
+### 5. Rode o projeto
 
 ```powershell
 npm run dev
@@ -77,15 +72,18 @@ npm run dev
 
 Acesse http://localhost:3000.
 
+Se o banco ainda não possuir usuários, o UnifiAccess redirecionará automaticamente para `/setup`, onde você cria o primeiro administrador. Após essa criação, o setup inicial fica desabilitado e o usuário entra automaticamente no sistema.
+
 ## Resetando o banco local
 
-Para apagar os dados e recriar o banco:
+Para apagar todos os dados e voltar ao primeiro acesso:
 
 ```powershell
 docker compose down -v
 docker compose up -d
-npm run db:seed
 ```
+
+Depois, abra http://localhost:3000 novamente e crie um novo administrador inicial.
 
 ## API de identidade
 
