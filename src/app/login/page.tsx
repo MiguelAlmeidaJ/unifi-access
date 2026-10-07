@@ -1,4 +1,5 @@
 import { getSession } from "@/lib/session";
+import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 
 export default async function LoginPage({
@@ -7,6 +8,10 @@ export default async function LoginPage({
   searchParams: Promise<{ error?: string }>;
 }) {
   if (await getSession()) redirect("/");
+
+  const { rows } = await db.query("SELECT EXISTS (SELECT 1 FROM users) AS has_users");
+  if (!rows[0]?.has_users) redirect("/setup");
+
   const params = await searchParams;
 
   return (
